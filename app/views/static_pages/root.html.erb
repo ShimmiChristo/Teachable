@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Page</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <header class="header-background">
+    <div class="logo">
+    </div>
+    <nav id="navbar">
+      <div class="nav-wrapper vertical-center">
+        <ul class="nav navbar center">
+          <li><a href="/">Search</a></li>
+          <li><a href="favorites">Favorites</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header> 
+
+  <div class="container search-container">
+    <div class="row title-row">
+        <div class="col-md-7 col-md-offset-5">
+            <h1>Expandable Search Form</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7 col-md-offset-4">
+        
+            <%= form_tag("", :method => "get", class: "search-form") do %>
+                <%= text_field_tag :search, params[:search], id: [:search], placeholder: "Search" %>
+                  <%= image_submit_tag("magnifying-glass.png", class: 'magnifying-logo', :name => nil) %>
+                
+            <% end %>
+    </div>       
+        <div class="col-md-7 col-md-offset-5">
+          <% if params[:search].present? %>
+                <div class="wrap">
+                  <%= link_to @name["project_uri"] do %>
+                      <%= @name["name"] %> 
+                       <% end %>
+                       <div class="on-gray" onclick='fav_on_off()' ></div>
+                       <div class="on-blue" onclick='fav_on_off()'></div>
+                 </div>
+                  <h4> INFORMATION </h4>                      
+                      <div class="info"> 
+                        <%= @name["info"] %>
+                      </div>
+                                       
+                  <h4> DEPENDENCIES </h4>
+                  <div class="info">
+                     <%@name["dependencies"]["development"].each do |gems| %>
+                        <div class="item">
+                        <li>
+                          <%= link_to @name["project_uri"] do %>
+                              <%= gems["name"] %>
+                              
+                          <% end %>  
+                              <div class="on-gray" onclick= 'fav_on_off()'></div>
+                              <div class="on-blue" onclick= 'fav_on_off()'></div>
+                        </li> 
+                        </div>              
+                     <% end .empty? and begin %>
+                        None
+                     <% end %>
+                  </div>
+          <% end %>
+        </div>
+      </div>
+</div>
+
+<%= yield %>
+<%= javascript_include_tag ('staticPages.js') %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+
+function fav_on_off() {
+    $(".on-gray").click(function() {
+      if($(this).hasClass('on-gray')){
+        $(this).addClass('on-blue').css('display','inline');
+        $(this).parent().addClass('favoriteGem');        
+        $(this).removeClass('on-gray');
+      }else{
+        //$(this).addClass('blue-star on');
+      }
+    });
+     $(".on-blue").click(function() {
+      if($(this).hasClass('on-blue')){
+        $(this).addClass('on-gray');
+        $(this).parent().removeClass('favoriteGem');
+        $(this).removeClass('on-blue');
+      }else{
+        //$(this).addClass('blue-star on');
+      }
+    });  
+};
+
+
+// get favorites from local storage or empty array
+var favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+// add class 'fav' to each favorite
+favorites.forEach(function(favorite) {
+  document.getElementsByClass(favorite).className = 'fav';
+});
+// register click event listener
+document.querySelector('.item').addEventListener('click', function(e) {
+  var id = e.target.class,
+      item = e.target,
+      index = favorites.indexOf(id);
+  // return if target doesn't have an id (shouldn't happen)
+  if (!id) return;
+  // item is not favorite
+  if (index == -1) {
+    favorites.push(id);
+    item.className = 'fav';
+  // item is already favorite
+  } else {
+    favorites.splice(index, 1);
+    item.className = '';
+  }
+  // store array in local storage
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+});
+
+
+
+
+</script>
+</body>
+</html>

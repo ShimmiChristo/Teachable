@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Page</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <header class="header-background">
+    <div class="logo">
+    </div>
+    <nav id="navbar">
+      <div class="nav-wrapper vertical-center">
+        <ul class="nav navbar center">
+          <li><a href="/">Search</a></li>
+          <li><a href="favorites">Favorites</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header> 
+
+  <div class="container search-container">
+    <div class="row title-row">
+        <div class="col-md-7 col-md-offset-5">
+            <h1>Favorites</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7 col-md-offset-4">
+           
+             <div id="result">
+             
+             </div>
+      
+            
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+document.getElementById("result").innerHTML = localStorage.getItem("favorites");
+
+
+</script>
+
+</body>
+</html>
